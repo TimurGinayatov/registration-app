@@ -5,7 +5,7 @@ pipeline {
         jdk 'Java17'
         maven 'Maven3'
     }
-	
+
     environment {
 	    APP_NAME = "register-app-pipeline"
             RELEASE = "1.0.0"
@@ -85,7 +85,14 @@ pipeline {
 	             sh "docker rm trivy"
                 }
             }
-        } 
+        }
+	stage("Trigger CD Pipeline") {
+            steps {
+                script {
+                     sh "curl -v -k --user clouduser:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-13-232-128-192.ap-south-1.compute.amazonaws.com:8080/job/gitops-register-app-cd/buildWithParameters?token=gitops-token'"
+                }
+            }
+       }
 	    
     }	    
 }
