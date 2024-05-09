@@ -79,6 +79,7 @@ pipeline {
                 }
             }
         }
+
 	stage ('Cleanup Artifacts') {
             steps {
                 script {
